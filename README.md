@@ -1,5 +1,5 @@
 # TMU-Projects
-Projects for my courses at Toronto Metropolitan University
+Projects for my digital circuit and FPGA emulation courses at Toronto Metropolitan University
 
 ## ELE 838 - Systems on Chip Design - W2022
 Used SystemC to simulate basic digital circuits and generate their waveforms for static timing analysis.
