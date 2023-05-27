@@ -1,0 +1,211 @@
+/*
+ * main.c
+ *
+ *  Created on: 2014-11-15
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <time.h>
+#include <sys/mman.h>
+#include <stdbool.h>
+#include <pthread.h>
+#include "hwlib.h"
+#include "socal/socal.h"
+#include "socal/hps.h"
+#include "socal/alt_gpio.h"
+#include "hps_0.h"
+#include "led.h"
+#include "seg7.h"
+#include "sw.h"
+
+
+#define LW_SIZE 0x00200000
+#define LWHPS2FPGA_BASE 0xff200000
+
+volatile uint32_t *h2p_lw_led_addr = NULL;
+volatile uint32_t *h2p_lw_hex_addr = NULL;
+volatile uint32_t *h2p_lw_sw_addr = NULL;
+
+void led_blink(void){
+	int i=0;
+	printf("LED ON \r\n");
+	for(i=0;i<=10;i++){
+		LEDR_LightCount(i);
+		usleep(100*1000);
+	}
+
+	printf("LED OFF \r\n");
+
+	for(i=0;i<=10;i++){
+		LEDR_OffCount(i);
+		usleep(100*1000);
+	}
+}
+
+/*//from Cyclone V DE1 manual, page 26: https://www.ee.ryerson.ca/~courses/coe838/Data-Sheets/DE1-SoC_User_Manual.pdf
+ *   -0-
+ *  |   |
+ *  5   1
+ *  |   |
+ *   -6-
+ *  |   |
+ *  4   2
+ *  |   |
+ *   -3-
+ * hex num = 6543210
+ * */
+static char op_symbol[4] = {'-', '+', '*', '/'};
+static uint8_t op_sseg[5] = {	0b1000000,	//minus : -
+								0b1110011,	//plus : p
+								0b1011100, 	//multiply : * : square
+								0b1011110,  //divide : d
+								0b1001000}; //equals sign : =
+static unsigned char szMap[] = {
+        63, 6, 91, 79, 102, 109, 125, 7,
+        127, 111, 119, 124, 57, 94, 121, 113
+    };  // 0,1,2, ... 9, a, b, c, d, e, f
+
+void alu_loop(void){
+	uint32_t switches;
+	uint8_t a, b, op, out;
+	printf("in alu_loop()\n");
+	while(1){
+		//read switches
+		switches = readSwitches();
+		//printf("read switches = %x\n", switches);
+		//printf("write to LEDs\n");
+		//turn on LEDs for each switch that is on
+		alt_write_word(h2p_lw_led_addr, switches);
+		//switches = 0b1001000011;
+		//printf("process switch states as inputs\n");
+		//convert switches into variables they represent
+		//0x02C0 = 0000 0011 1100 0000
+		a = (uint8_t)((switches & 0x03C0) >> 6);
+		//0x0030 = 0000 0000 0011 0000
+		op = (uint8_t)((switches & 0x0030) >> 4);
+		//0x000F = 0000 0000 0000 1111
+		b = (uint8_t)(switches & 0x000F);
+
+		//calculate result
+		switch(op){
+			case 0b00: //subtract
+				out = a - b;
+				break;
+
+			case 0b01: //add
+				out = a + b;
+				break;
+
+			case 0b10: //multiply
+				out = a * b;
+				break;
+
+			case 0b11: //divide
+				if(b == 0){
+					out = 0xFF;
+				}
+				else{
+					out = a / b;
+				}
+				break;
+
+			default:
+				out = 0xFF;
+				break;
+		}
+		//printf("display result to 7segs\n");
+		//show input number A on 7-segment display
+		alt_write_word(h2p_lw_hex_addr+5, szMap[a]);
+		//show opcode symbol on 7-segment display
+		alt_write_word(h2p_lw_hex_addr+4, op_sseg[op]);
+		//show input number B on 7-segment display
+		alt_write_word(h2p_lw_hex_addr+3, szMap[b]);
+		//show equals sign on 7-segment display
+		alt_write_word(h2p_lw_hex_addr+2, op_sseg[4]);
+
+		if((op == 0x11) && (b == 0)){
+			//make 7segs for ALU out appear blank if dividing by 0
+			alt_write_word(h2p_lw_hex_addr+1, 0);
+			alt_write_word(h2p_lw_hex_addr, 0);
+		}
+		else{
+			//show upper half of operation output on 7-segment display
+			alt_write_word(h2p_lw_hex_addr+1, szMap[(out & 0xF0) >> 4]);
+			//show lower half of operation output on 7-segment display
+			alt_write_word(h2p_lw_hex_addr, szMap[out & 0x0F]);
+		}
+
+		//print ALU state to serial terminal
+		printf("A, op, B = out -> %d %c %d = %d\n", a, op_symbol[op], b, out);
+		usleep(100*1000);
+	}
+}
+
+
+int main(int argc, char **argv){
+
+	pthread_t id;
+	int ret;
+	void *virtual_base;
+	int fd;
+
+
+	//open the /dev/mem to access the FPGA space for reading and writing
+	if( ( fd = open( "/dev/mem", ( O_RDWR | O_SYNC ) ) ) == -1 ) {
+		printf( "ERROR: could not open \"/dev/mem\"...\n" );
+		return( 1 );
+	}
+
+	//map the virtual memory space to virtual_base, that is 2MB in size (0x00200000), at address LWHPS2FPGA_BASE
+	virtual_base =  mmap( NULL, LW_SIZE, ( PROT_READ | PROT_WRITE ), MAP_SHARED, fd, LWHPS2FPGA_BASE);
+
+	//check that the mapping was successful
+	if( virtual_base == MAP_FAILED ) {
+		printf( "ERROR: mmap() failed...\n" );
+		close( fd );
+		return(1);
+	}
+	
+	// map the address space for the LED and HEX registers into user space so we can interact with them.
+	// i.e. the address exists at virtual_base + the offset of your IP component
+	h2p_lw_led_addr= virtual_base + ((uint32_t)(LED_PIO_BASE));
+	h2p_lw_hex_addr= virtual_base + ( (uint32_t)(SEG7_IF_0_BASE));
+	h2p_lw_sw_addr = virtual_base + ((uint32_t)(SW_PIO_BASE));
+
+	/*//create and run the thread for the LED
+	printf("LEDs\n");
+	ret=pthread_create(&id,NULL,(void *)led_blink,NULL);
+
+	if(ret!=0){
+		printf("Creat pthread error!\n");
+		exit(1);
+	}*/
+
+	//and run the SEVEN SEG process
+	printf("7SEG\n");
+	SEG7_All_Number();
+
+	//once the SEG7 show is complete, display a message
+	//display_msg();
+	
+	pthread_join(id,NULL);
+	printf("main joined LED thread\n");
+
+	//only do ALU functions after both LED light show and SEVEN SEG process have ended
+	printf("alu\n");
+	alu_loop();
+
+	if( munmap( virtual_base, LW_SIZE) != 0 ) {
+		printf( "ERROR: munmap() failed...\n" );
+		close( fd );
+		return( 1 );
+	}
+
+	close( fd );
+
+	return 0;
+
+}

@@ -1,0 +1,22 @@
+|fsm
+clk => yfsm~32.DATAIN
+data_in => yfsm~0.OUTPUTSELECT
+data_in => yfsm~1.OUTPUTSELECT
+data_in => yfsm~2.OUTPUTSELECT
+data_in => yfsm~3.OUTPUTSELECT
+data_in => yfsm~4.OUTPUTSELECT
+data_in => yfsm~5.OUTPUTSELECT
+data_in => yfsm~6.OUTPUTSELECT
+data_in => yfsm~7.OUTPUTSELECT
+data_in => yfsm~8.OUTPUTSELECT
+reset => yfsm~36.DATAIN
+student_id[0] <= WideOr2.DB_MAX_OUTPUT_PORT_TYPE
+student_id[1] <= WideOr1.DB_MAX_OUTPUT_PORT_TYPE
+student_id[2] <= WideOr0.DB_MAX_OUTPUT_PORT_TYPE
+student_id[3] <= student_id[3]~0.DB_MAX_OUTPUT_PORT_TYPE
+current_state[0] <= WideOr5.DB_MAX_OUTPUT_PORT_TYPE
+current_state[1] <= WideOr4.DB_MAX_OUTPUT_PORT_TYPE
+current_state[2] <= WideOr3.DB_MAX_OUTPUT_PORT_TYPE
+current_state[3] <= current_state[3]~0.DB_MAX_OUTPUT_PORT_TYPE
+
+

@@ -1,0 +1,129 @@
+$date
+     Feb 03, 2022       22:00:25
+$end
+
+$version
+              SystemC 2.3.0-ASI --- Sep 10 2012 16:44:06
+$end
+
+$timescale
+     1 ns
+$end
+
+$scope module SystemC $end
+$var wire    8  aaa  a [7:0]  $end
+$var wire    8  aab  b [7:0]  $end
+$var wire   16  aac  p [15:0]  $end
+$upscope $end
+$enddefinitions  $end
+
+$comment
+All initial values are dumped below at time 0 sec = 0 timescale units.
+$end
+
+$dumpvars
+b0 aaa
+b0 aab
+b0 aac
+$end
+
+#10
+b1 aab
+
+#20
+b11011 aab
+
+#30
+b11111110 aab
+
+#40
+b11111111 aab
+
+#50
+b1 aaa
+b0 aab
+
+#60
+b1 aab
+b1 aac
+
+#70
+b11011 aab
+b11011 aac
+
+#80
+b11111110 aab
+b11111110 aac
+
+#90
+b11111111 aab
+b11111111 aac
+
+#100
+b11011 aaa
+b0 aab
+b0 aac
+
+#110
+b1 aab
+b11011 aac
+
+#120
+b11011 aab
+b1011011001 aac
+
+#130
+b11111110 aab
+b1101011001010 aac
+
+#140
+b11111111 aab
+b1101011100101 aac
+
+#150
+b11111110 aaa
+b0 aab
+b0 aac
+
+#160
+b1 aab
+b11111110 aac
+
+#170
+b11011 aab
+b1101011001010 aac
+
+#180
+b11111110 aab
+b1111110000000100 aac
+
+#190
+b11111111 aab
+b1111110100000010 aac
+
+#200
+b11111111 aaa
+b0 aab
+b0 aac
+
+#210
+b1 aab
+b11111111 aac
+
+#220
+b11011 aab
+b1101011100101 aac
+
+#230
+b11111110 aab
+b1111110100000010 aac
+
+#240
+b11111111 aab
+b1111111000000001 aac
+
+#250
+b0 aaa
+b0 aab
+b0 aac
+

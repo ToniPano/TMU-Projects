@@ -1,0 +1,20 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity latch1 is
+	port( A					:IN STD_LOGIC_VECTOR(7 downto 0);
+			resetn, clock	:IN STD_LOGIC;
+			Q					:OUT STD_LOGIC_VECTOR(7 downto 0));
+end latch1;
+
+architecture behaviour of latch1 is
+begin
+	process(resetn,clock)
+	begin
+		if resetn='1' then
+			Q <= "00000000";
+		elsif (clock'event AND clock = '1') then
+			Q <= A;
+		end if;
+	end process;
+end behaviour;

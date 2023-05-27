@@ -1,0 +1,28 @@
+#include <iostream>
+#include "barrel_shifter.h"
+
+sc_int<8> d_shifted;
+int bit_pos, shift;
+
+void barrel_shifter :: behaviour(){
+	if(en.read() == 1){	//see if enabled
+		if(l_r.read() == 0){ //shift left (assuming MSB on left)
+			shift = shift_amt.read();			
+			for(bit_pos = 0; bit_pos < 8; bit_pos++){
+				d_shifted[(bit_pos + shift) % 8] = d_in.read()[bit_pos];
+			}
+		}
+		else{ //shift right (assuming MSB on left)
+			shift = shift_amt.read();
+			for(bit_pos = 0; bit_pos < 8; bit_pos++){
+				d_shifted[(bit_pos + (8 - shift)) % 8] = d_in.read()[bit_pos];
+			}
+		}
+		d_out.write(d_shifted); //write shifted result to output variable
+	}
+	else{	//see if disabled
+		d_out.write(0);
+	}
+	
+	cout << "en: " << en.read() << ", l_r: " << l_r.read() << ", shift_amt: " << shift_amt.read() << ", d_in: " << d_in.read() << ", d_out: " << d_out.read() << endl;
+}

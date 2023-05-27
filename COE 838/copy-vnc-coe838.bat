@@ -1,0 +1,1 @@
+scp -r tpano@pascal.ee.ryerson.ca:/home/student2/tpano/coe838/lab3 "C:/Users/Toni/Desktop/semester 10/COE 838/labs"

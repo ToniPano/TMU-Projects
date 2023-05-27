@@ -1,0 +1,129 @@
+$date
+     Feb 03, 2022       21:42:32
+$end
+
+$version
+              SystemC 2.3.0-ASI --- Sep 10 2012 16:44:06
+$end
+
+$timescale
+     1 ns
+$end
+
+$scope module SystemC $end
+$var wire    1  aaa  A       $end
+$var wire    1  aab  B       $end
+$var wire    1  aac  Cin       $end
+$var wire    1  aad  Sum_in       $end
+$var wire    1  aae  Sum_csa       $end
+$var wire    1  aaf  Cout_csa       $end
+$var wire    1  aag  Sum_cpa       $end
+$var wire    1  aah  Cout_cpa       $end
+$upscope $end
+$enddefinitions  $end
+
+$comment
+All initial values are dumped below at time 0 sec = 0 timescale units.
+$end
+
+$dumpvars
+0aaa
+0aab
+0aac
+0aad
+0aae
+0aaf
+0aag
+0aah
+$end
+
+#10
+1aaa
+1aag
+
+#20
+0aaa
+1aab
+
+#30
+1aaa
+1aae
+0aag
+1aah
+
+#40
+0aaa
+0aab
+1aac
+1aag
+0aah
+
+#50
+1aaa
+0aag
+1aah
+
+#60
+0aaa
+1aab
+
+#70
+1aaa
+0aae
+1aaf
+1aag
+
+#80
+0aaa
+0aab
+0aac
+1aad
+1aae
+0aaf
+0aag
+0aah
+
+#90
+1aaa
+1aag
+
+#100
+0aaa
+1aab
+
+#110
+1aaa
+0aae
+1aaf
+0aag
+1aah
+
+#120
+0aaa
+0aab
+1aac
+1aag
+0aah
+
+#130
+1aaa
+0aag
+1aah
+
+#140
+0aaa
+1aab
+
+#150
+1aaa
+1aae
+1aag
+
+#160
+0aaa
+0aab
+0aac
+0aaf
+0aag
+0aah
+

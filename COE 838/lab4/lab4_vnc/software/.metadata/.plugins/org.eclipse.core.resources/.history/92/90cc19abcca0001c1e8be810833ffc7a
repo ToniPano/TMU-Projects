@@ -1,0 +1,166 @@
+/* COE838 - System-on-Chip
+ * Lab 4 - Custom IP for HPS/FPGA Systems
+ * main.c
+ *	
+ *  Created on: 2014-11-15
+ *  Author: Anita Tino
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <time.h>
+#include <sys/mman.h>
+#include "hwlib.h"
+#include "socal/socal.h"
+#include "socal/hps.h"
+#include "socal/alt_gpio.h"
+#include "hps_0.h"
+
+#define LW_SIZE 0x00200000
+#define LWHPS2FPGA_BASE 0xff200000
+
+volatile uint32_t *mult_control = NULL;
+volatile uint32_t *mult_data = NULL;
+volatile uint32_t *div_control = NULL;
+volatile uint32_t *div_data = NULL;
+int mult_success, mult_total;
+int div_success, div_total;
+
+void reset_system(){
+	alt_write_word(mult_control+1, 0x1); //assert mult reset
+	while(!(alt_read_word(mult_control+1) & 0x1));
+	
+	printf("MULT Reset done. Deasserting signal\n");
+	while((alt_read_word(mult_control+1) & 0x1));//deassert mult reset
+
+	alt_write_word(div_control+1, 0x1); //assert div reset
+	while(!(alt_read_word(div_control+1) & 0x1));
+
+	printf("DIV Reset done. Deasserting signal\n");
+	while((alt_read_word(div_control+1) & 0x1));//deassert div reset
+}
+
+void copy_to_input(uint32_t a, uint32_t b){
+	
+	alt_write_word(mult_data, a); //write input A to MULT unit
+	alt_write_word(mult_data+1, b); //write input B to MULT unit
+
+	//start conversion
+	alt_write_word(mult_control, 0x00000001);
+
+	//double check that div start was asserted
+	while(!(alt_read_word(mult_control) & 0x1));
+	
+	printf("MULT Start successful\n");
+
+	alt_write_word(div_data, a); //write denominator to DIV unit
+	alt_write_word(div_data+1, b); //write numerator to DIV unit
+
+	//start conversion
+	alt_write_word(div_control, 0x00000001);	//write 1 to DIV start
+
+	//double check that div start was asserted
+	while(!(alt_read_word(div_control) & 0x1));
+
+	printf("DIV Start successful\n");
+}
+
+void copy_output(){
+	uint32_t word, op1, op2; 
+	//wait for MULT done
+	printf("waiting for MULT done\n");
+	while(!(alt_read_word(mult_control+2) & 0x1));
+
+	printf("MULT conversion done\n");
+	word = alt_read_word(mult_data+0);
+	op1 = alt_read_word(mult_data+1); 
+	op2 = alt_read_word(mult_data+2);
+	printf("0x%08x * 0x%08x = 0x%08x. [Expected] 0x%08x\n",  op1, op2, word, (op1*op2));
+	if(word == (op1*op2)){
+		printf("[SUCCESSFUL]\n");
+		mult_success++;
+	}else{
+		printf("[FAILED]\n");
+	}
+	mult_total++;
+	printf("------\n");
+
+	uint32_t quotient, remainder, denominator, numerator;
+	uint32_t expected_q, expected_r;
+	//wait for DIV done
+	printf("waiting for DIV done\n");
+	while(!(alt_read_word(mult_control+2) & 0x1));
+
+	printf("DIV conversion done\n");
+	quotient = alt_read_word(mult_data+0);
+	remainder = alt_read_word(mult_data+1);
+	denominator = alt_read_word(mult_data+2);
+	numerator = alt_read_word(mult_data+3);
+
+	expected_q = ((uint16_t)numerator) / ((uint16_t)denominator);
+	expected_r = abs(numerator % denominator);
+
+	printf("0x%08x / 0x%08x = 0x%08x + r0x%08x. [Expected] 0x%08x + r0x%08x\n",  numerator, denominator, quotient, remainder, expected_q, expected_r);
+	if((quotient == expected_q) && (remainder == expected_r)){
+		printf("[SUCCESSFUL]\n");
+		div_success++;
+	}else{
+		printf("[FAILED]\n");
+	}
+	div_total++;
+	printf("------------------------------------------------\n");
+}
+
+int main(int argc, char **argv){
+	int fd, i, j;
+	void *virtual_base; 
+	mult_success = 0; mult_total = 0;
+	
+	//map address space of fpga for software to access here
+	if((fd = open("/dev/mem", ( O_RDWR | O_SYNC ) ) ) == -1 ) {
+		printf( "ERROR: could not open \"/dev/mem\"...\n" );
+		return( 1 );
+	}
+
+	virtual_base =  mmap( NULL, LW_SIZE, ( PROT_READ | PROT_WRITE ), MAP_SHARED, fd, LWHPS2FPGA_BASE);
+
+	if( virtual_base == MAP_FAILED ) {
+		printf( "ERROR: mmap() failed...\n" );
+		close( fd );
+		return(1);
+	}
+
+	//initialize the addresses
+	mult_control = virtual_base + ((uint32_t)( MULT_CONTROL_0_BASE) );
+	mult_data = virtual_base + ((uint32_t)(MULT_DATA_0_BASE));
+	div_control = virtual_base + ((uint32_t)(DIV_CONTROL_0_BASE));
+	div_data = virtual_base + ((uint32_t)(DIV_DATA_0_BASE));
+	
+	printf("------>Finished initializing HPS/FPGA system<-------\n");
+
+	for(i = 1; i < 16; i++){
+		for(j = 1; j < 16; j++){
+			printf("---------------- Iteration [%d, %d] ------------------\n", i, j);
+			reset_system();
+			copy_to_input((uint32_t)i, (uint32_t)j);
+			copy_output();
+		}
+	}	
+	printf("[MULT TEST PASSED] %d/%d\n", mult_success, mult_total);
+	printf("[DIV TEST PASSED]  %d/%d\n", div_success, div_total);
+
+	// clean up our memory mapping and exit
+	if( munmap( virtual_base, LW_SIZE) != 0 ) {
+		printf( "ERROR: munmap() failed...\n" );
+		close( fd );
+		return( 1 );
+	}
+
+	close( fd );
+
+	
+	return 0;
+
+}

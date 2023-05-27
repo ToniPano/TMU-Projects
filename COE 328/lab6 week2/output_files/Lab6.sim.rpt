@@ -1,0 +1,187 @@
+Simulator report for Lab6
+Fri Nov 23 08:00:23 2018
+Quartus II 64-Bit Version 13.0.0 Build 156 04/24/2013 SJ Web Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Simulator Summary
+  3. Simulator Settings
+  4. Simulation Waveforms
+  5. Coverage Summary
+  6. Complete 1/0-Value Coverage
+  7. Missing 1-Value Coverage
+  8. Missing 0-Value Coverage
+  9. Simulator INI Usage
+ 10. Simulator Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 1991-2013 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+
+
+
++-------------------+
+; Simulator Summary ;
++------+------------+
+; Type ; Value      ;
++------+------------+
+
+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Simulator Settings                                                                                                                                               ;
++--------------------------------------------------------------------------------------------+-----------------------------------------------------+---------------+
+; Option                                                                                     ; Setting                                             ; Default Value ;
++--------------------------------------------------------------------------------------------+-----------------------------------------------------+---------------+
+; Simulation mode                                                                            ; Functional                                          ; Timing        ;
+; Start time                                                                                 ; 0 ns                                                ; 0 ns          ;
+; Simulation results format                                                                  ; VWF                                                 ;               ;
+; Vector input source                                                                        ; C:/Users/tonip/Desktop/COE 328/lab6 week2/alu2g.vwf ;               ;
+; Add pins automatically to simulation output waveforms                                      ; On                                                  ; On            ;
+; Check outputs                                                                              ; Off                                                 ; Off           ;
+; Report simulation coverage                                                                 ; On                                                  ; On            ;
+; Display complete 1/0 value coverage report                                                 ; On                                                  ; On            ;
+; Display missing 1-value coverage report                                                    ; On                                                  ; On            ;
+; Display missing 0-value coverage report                                                    ; On                                                  ; On            ;
+; Detect setup and hold time violations                                                      ; Off                                                 ; Off           ;
+; Detect glitches                                                                            ; Off                                                 ; Off           ;
+; Disable timing delays in Timing Simulation                                                 ; Off                                                 ; Off           ;
+; Generate Signal Activity File                                                              ; Off                                                 ; Off           ;
+; Generate VCD File for PowerPlay Power Analyzer                                             ; Off                                                 ; Off           ;
+; Group bus channels in simulation results                                                   ; Off                                                 ; Off           ;
+; Preserve fewer signal transitions to reduce memory requirements                            ; On                                                  ; On            ;
+; Trigger vector comparison with the specified mode                                          ; INPUT_EDGE                                          ; INPUT_EDGE    ;
+; Disable setup and hold time violations detection in input registers of bi-directional pins ; Off                                                 ; Off           ;
+; Overwrite Waveform Inputs With Simulation Outputs                                          ; Off                                                 ;               ;
+; Perform Glitch Filtering in Timing Simulation                                              ; Auto                                                ; Auto          ;
++--------------------------------------------------------------------------------------------+-----------------------------------------------------+---------------+
+
+
++----------------------+
+; Simulation Waveforms ;
++----------------------+
+Waveform report data cannot be output to ASCII.
+Please use Quartus II 64-Bit to view the waveform report data.
+
+
++------------------+
+; Coverage Summary ;
++------+-----------+
+; Type ; Value     ;
++------+-----------+
+
+
+The following table displays output ports that toggle between 1 and 0 during simulation.
++-------------------------------------------------+
+; Complete 1/0-Value Coverage                     ;
++-----------+------------------+------------------+
+; Node Name ; Output Port Name ; Output Port Type ;
++-----------+------------------+------------------+
+
+
+The following table displays output ports that do not toggle to 1 during simulation.
++-------------------------------------------------+
+; Missing 1-Value Coverage                        ;
++-----------+------------------+------------------+
+; Node Name ; Output Port Name ; Output Port Type ;
++-----------+------------------+------------------+
+
+
+The following table displays output ports that do not toggle to 0 during simulation.
++-------------------------------------------------+
+; Missing 0-Value Coverage                        ;
++-----------+------------------+------------------+
+; Node Name ; Output Port Name ; Output Port Type ;
++-----------+------------------+------------------+
+
+
++---------------------+
+; Simulator INI Usage ;
++--------+------------+
+; Option ; Usage      ;
++--------+------------+
+
+
++--------------------+
+; Simulator Messages ;
++--------------------+
+Info: *******************************************************************
+Info: Running Quartus II 64-Bit Simulator
+    Info: Version 13.0.0 Build 156 04/24/2013 SJ Web Edition
+    Info: Processing started: Fri Nov 23 08:00:22 2018
+Info: Command: quartus_sim --simulation_results_format=VWF Lab6 -c Lab6
+Info (324025): Using vector source file "C:/Users/tonip/Desktop/COE 328/lab6 week2/alu2g.vwf"
+Warning (328014): Can't find node "A[7]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "A[6]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "A[5]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "A[4]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "A[3]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "A[2]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "A[1]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "A[0]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "B[7]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "B[6]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "B[5]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "B[4]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "B[3]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "B[2]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "B[1]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "B[0]" for functional simulation. Ignored vector source file node.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "clock" in design.
+Warning (328014): Can't find node "neg" for functional simulation. Ignored vector source file node.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[15]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[14]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[13]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[12]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[11]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[10]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[9]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[8]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[7]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[6]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[5]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[4]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[3]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[2]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[1]" in design.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "OP[0]" in design.
+Warning (328014): Can't find node "R1[3]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "R1[2]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "R1[1]" for functional simulation. Ignored vector source file node.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "R1[0]" in design.
+Warning (328014): Can't find node "R2[3]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "R2[2]" for functional simulation. Ignored vector source file node.
+Warning (328014): Can't find node "R2[1]" for functional simulation. Ignored vector source file node.
+Warning (328013): Ignored node in vector source file. Can't find corresponding node name "R2[0]" in design.
+Warning (328017): Wrong node type for node "student_id[0]" in vector source file. Design node is of type Output, but signal in vector source file is of type Input.
+Error (328001): Can't simulate mismatched node types
+Warning (328017): Wrong node type for node "student_id[1]" in vector source file. Design node is of type Output, but signal in vector source file is of type Input.
+Error (328001): Can't simulate mismatched node types
+Warning (328017): Wrong node type for node "student_id[2]" in vector source file. Design node is of type Output, but signal in vector source file is of type Input.
+Error (328001): Can't simulate mismatched node types
+Warning (328017): Wrong node type for node "student_id[3]" in vector source file. Design node is of type Output, but signal in vector source file is of type Input.
+Error (328001): Can't simulate mismatched node types
+Error: Quartus II 64-Bit Simulator was unsuccessful. 4 errors, 46 warnings
+    Error: Peak virtual memory: 4461 megabytes
+    Error: Processing ended: Fri Nov 23 08:00:23 2018
+    Error: Elapsed time: 00:00:01
+    Error: Total CPU time (on all processors): 00:00:01
+
+

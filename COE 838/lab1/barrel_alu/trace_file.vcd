@@ -1,0 +1,178 @@
+$date
+     Jan 27, 2022       02:05:43
+$end
+
+$version
+              SystemC 2.3.0-ASI --- Sep 10 2012 16:44:06
+$end
+
+$timescale
+     1 ns
+$end
+
+$scope module SystemC $end
+$var wire    1  aaa  clk       $end
+$var wire    8  aab  A [7:0]  $end
+$var wire    8  aac  B [7:0]  $end
+$var wire    1  aad  BS_en       $end
+$var wire    1  aae  BS_shift_dir       $end
+$var wire    3  aaf  BS_shift_amt [2:0]  $end
+$var wire    8  aag  BS_out [7:0]  $end
+$var wire    1  aah  ALU_op       $end
+$var wire    8  aai  ALU_out [7:0]  $end
+$upscope $end
+$enddefinitions  $end
+
+$comment
+All initial values are dumped below at time 0 sec = 0 timescale units.
+$end
+
+$dumpvars
+1aaa
+b1 aab
+b10000001 aac
+0aad
+0aae
+b0 aaf
+b0 aag
+0aah
+b1 aai
+$end
+
+#5
+0aaa
+
+#7
+1aae
+
+#10
+1aaa
+
+#15
+0aaa
+
+#17
+0aae
+b1 aaf
+
+#20
+1aaa
+
+#25
+0aaa
+
+#27
+1aae
+
+#30
+1aaa
+
+#35
+0aaa
+
+#37
+1aad
+0aae
+b0 aaf
+
+#40
+1aaa
+b10000001 aag
+
+#45
+0aaa
+b10000000 aai
+
+#47
+1aae
+
+#50
+1aaa
+
+#55
+0aaa
+
+#57
+0aae
+b1 aaf
+
+#60
+1aaa
+b11 aag
+
+#65
+0aaa
+b11111110 aai
+
+#67
+1aae
+
+#70
+1aaa
+b11000000 aag
+
+#75
+0aaa
+b1000001 aai
+
+#77
+0aae
+b0 aaf
+1aah
+
+#80
+1aaa
+b10000001 aag
+
+#85
+0aaa
+b10000010 aai
+
+#87
+1aae
+
+#90
+1aaa
+
+#95
+0aaa
+
+#97
+0aae
+b1 aaf
+
+#100
+1aaa
+b11 aag
+
+#105
+0aaa
+b100 aai
+
+#107
+1aae
+
+#110
+1aaa
+b11000000 aag
+
+#115
+0aaa
+b11000001 aai
+
+#117
+b0 aab
+b0 aac
+0aad
+0aae
+b0 aaf
+0aah
+
+#120
+1aaa
+b0 aag
+
+#125
+0aaa
+b0 aai
+
